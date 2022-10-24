@@ -54,27 +54,28 @@ const getSpecificRepo = async function (repoName) {
     const get = await fetch(`https://api.github.com/repos/${username}/${repoName}`);
     const repoInfo = await get.json();
 
-    const fetchLanguages = repoInfo.languages_url;
-    const languageData = fetchLanguages;
+    const fetchLanguages = await fetch(repoInfo.languages_url);
+    const languageData = await fetchLanguages.json();
     console.log(languageData);
+
     const languages = [];
 
-    // for (let language in languageData) {
-    //     languages.push(language);
-    // };
+    for (let language in languageData) {
+        languages.push(language);
+    };
 
-    // displaySpecificRepoInfo(repoInfo, languages);
+    displaySpecificRepoInfo(repoInfo, languages);
 };
 
-// const displaySpecificRepoInfo = function (repoInfo, languages) {
-//     repoData.innerHTML = "";
-//     const div = document.createElement("div");
-//     div.innerHTML = `
-//             <p>Description: ${repoInfo.description}</p>
-//             <p>Default Branch: ${repoInfo.default_branch}</p>
-//             <p>Languages: ${languages.join(", ")}</p>
-//             <a class="visit" href="${repoInfo.html_url}" target="_blank" rel="noreferrer noopener">View Repo on Github!<a>`;
-//     repoData.append(div);
-//     repoData.classList.remove("hide");
-//     repos.classList.add("hide");
-// };
+const displaySpecificRepoInfo = function (repoInfo, languages) {
+    repoData.innerHTML = "";
+    const div = document.createElement("div");
+    div.innerHTML = `
+            <p>Description: ${repoInfo.description}</p>
+            <p>Default Branch: ${repoInfo.default_branch}</p>
+            <p>Languages: ${languages.join(", ")}</p>
+            <a class="visit" href="${repoInfo.html_url}" target="_blank" rel="noreferrer noopener">View Repo on Github!<a>`;
+    repoData.append(div);
+    repoData.classList.remove("hide");
+    repos.classList.add("hide");
+};
